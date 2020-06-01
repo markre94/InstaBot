@@ -11,79 +11,70 @@ class Instabot:
         time.sleep(1)
 
     def refresh_page(self):
-        browser = self.browser
-        browser.refresh()
+        self.browser.refresh()
 
     def login(self, username: str, passwd: str):
-        browser = self.browser
-        browser.find_element_by_name("username").send_keys(username)
-        my_passwd = browser.find_element_by_name("password")
+        self.browser.find_element_by_name("username").send_keys(username)
+        my_passwd = self.browser.find_element_by_name("password")
         my_passwd.send_keys(passwd)
         my_passwd.send_keys(Keys.ENTER)
         time.sleep(3)
         # if browser.find_elements_by_xpath()
         # unclick any pop out about notfication
-        browser.find_element_by_xpath('/html/body/div[4]/div/div/div[3]/button[2]').click()
+        # if browser.find_element_by_xpath('/html/body/div[4]/div/div/div[3]/button[2]'):
+        #     browser.find_element_by_xpath('/html/body/div[4]/div/div/div[3]/button[2]').click()
 
-    def someones_page(self, username: str):
-        browser = self.browser
-        browser.get('https://www.instagram.com/' + username)
+    def open_someones_page(self, username: str):
+        self.browser.get('https://www.instagram.com/' + username)
         time.sleep(3)
 
-    def open_photo(self):
-        browser = self.browser
-        photo = browser.find_element_by_class_name('_9AhH0')
+    def open_post(self):
+        photo = self.browser.find_element_by_class_name('_9AhH0')
         photo.click()
         time.sleep(3)
 
     def like_photo(self):
-        browser = self.browser
-        like_button = browser.find_element_by_xpath('/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]')
+        like_button = self.browser.find_element_by_xpath(
+            '/html/body/div[4]/div[2]/div/article/div[2]/section[1]/span[1]')
         like_button.click()
         time.sleep(1)
 
     def post_comment(self, commentary):
-        browser = self.browser
         # CLick on a text bar
-        comment_space = browser.find_element_by_class_name('Ypffh')
+        comment_space = self.browser.find_element_by_class_name('Ypffh')
         comment_space.click()
         # Enter the comment
-        browser.find_element_by_xpath(
+        self.browser.find_element_by_xpath(
             '/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/textarea').send_keys(commentary)
-        browser.find_element_by_xpath('/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button').click()
-        pass
+        self.browser.find_element_by_xpath(
+            '/html/body/div[4]/div[2]/div/article/div[2]/section[3]/div/form/button').click()
 
     def count_posts(self):
-        browser = self.browser
-        post_count = browser.find_element_by_class_name('g47SY').text
+        post_count = self.browser.find_element_by_class_name('g47SY').text
         return int(post_count.replace(' ', ''))
-        pass
 
+    def check_for_added_post(self):
+        current_number = self.count_posts()
+        while True:
+            time.sleep(3)
+            new_number = self.count_posts()
+            if new_number == current_number:
+                time.sleep(5)
+                self.refresh_page()
+            elif new_number > current_number:
+                time.sleep(1)
+                self.open_post()
+                self.like_photo()
+                self.post_comment('The bot was here.')
+                time.sleep(1)
+                break
+
+
+# meetoda check_if_changed -> bool
 
 if __name__ == '__main__':
     bot1 = Instabot()
     bot1.login('krezel94', my_secret_password)
-    bot1.someones_page('krezel94')
-    current_number = bot1.count_posts()
+    bot1.open_someones_page('krezel94')
     time.sleep(3)
-
-    # Check for the new added photos
-
-    while True:
-        time.sleep(3)
-        new_number = bot1.count_posts()
-        if new_number == current_number:
-            time.sleep(5)
-            bot1.refresh_page()
-        else:
-            time.sleep(1)
-            bot1.open_photo()
-            bot1.like_photo()
-            bot1.post_comment('<3')
-            time.sleep(1)
-            break
-
-    # bot1.open_photo()
-    # bot1.like_photo()
-    # bot1.post_comment('Keep up a good work!')
-    pass
+    bot1.check_for_added_post()
