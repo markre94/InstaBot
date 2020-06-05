@@ -19,10 +19,6 @@ class Instabot:
         my_passwd.send_keys(passwd)
         my_passwd.send_keys(Keys.ENTER)
         time.sleep(3)
-        # if browser.find_elements_by_xpath()
-        # unclick any pop out about notfication
-        # if browser.find_element_by_xpath('/html/body/div[4]/div/div/div[3]/button[2]'):
-        #     browser.find_element_by_xpath('/html/body/div[4]/div/div/div[3]/button[2]').click()
 
     def open_someones_page(self, username: str):
         self.browser.get('https://www.instagram.com/' + username)
