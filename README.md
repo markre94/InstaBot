@@ -1,4 +1,4 @@
-# InstaBot - demo
+# InstaBot - demp
 
 The bot that using selenium opens a browser, logs into my own instagram account then open a page of selected user and looks for any new added photos or videos.
 
